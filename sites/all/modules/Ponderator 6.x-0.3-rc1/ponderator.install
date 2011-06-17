@@ -1,0 +1,170 @@
+<?php
+// $Id: ponderator.install , v0.2.001 2011/01/26
+
+/**
+* Implementation of hook_install().
+*/
+function ponderator_install() {
+	// Use schema API to create database table.
+	if(drupal_install_schema('ponderator'))
+		drupal_set_message(st("Ponderator settings are available under !link",
+    	array( '!link' => l('Administer > Site configuration > Ponderator ',  'admin/settings/ponderator' ) )
+  		));
+	else		
+		drupal_set_message(t('ponderator table creation error'));
+}
+
+/**
+* Implementation of hook_uninstall().
+*/
+function ponderator_uninstall() {
+	
+	delete_variables();
+
+	// Use schema API to delete database table.
+	if(drupal_uninstall_schema('ponderator'))
+		drupal_set_message(t('ponderator table deleted'));
+	else
+		drupal_set_message(t('ponderator table delete error'));
+}
+
+/**
+* Implementation of hook_schema().
+*/
+function ponderator_schema() {
+	
+	$schema['ponderator_criterion'] = array(
+		'description'	=> t('All different criteria for idea valoration'),
+		'fields'		=>array(
+			'cid'	=> array(
+				'deskription'	=> t('Criterion identifier'),
+				'type'			=> 'serial',
+				'unsigned'		=> TRUE,
+				'not null'		=> TRUE,
+			),
+			'tid' => array(
+				'description' => t('The {Term}.tid of the related process.'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0
+			),
+			'name'	=>array(
+				'description'	=> t('Criterion name'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '128'
+			),
+			'description'	=>array(
+				'description'	=> t('Criterion description'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '512'
+			), 
+			'weight' => array(
+				'description' => t('The weight of the criterion.'),
+				'type' => 'int',
+				'unsigned' => false,
+				'not null' => TRUE,
+				'default' => 0),
+		),
+		'primary key' => array(
+			'cid'
+		),	
+	);
+	
+	$schema['ponderator_rate'] = array(
+		'description' => t('Stores node ratings that users write.'),
+		'fields' => array(
+			'nid' => array(
+				'description' => t('The {node}.nid to which the rating applies.'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0
+			),
+			'uid' => array(
+				'description' => t('The {user}.uid of the user who created the rate.'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0),
+			'cid' => array(
+				'description' => t('The {ponderator_criteria}.cid used to rate the idea'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0),
+			'rate' => array(
+				'description' => t('The rate value.'),
+				'type' => 'int',
+				'not null' => FALSE,
+				'default' => 0),
+			),
+		'primary key' => array(
+			'nid', 
+			'uid', 
+			'cid'),
+	);
+	$schema['ponderator_mode'] = array(
+		'description'	=> t('All different criteria for idea valoration'),
+		'fields'		=>array(
+			'tid' => array(
+				'description' => t('The {Term}.tid of the related process.'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0
+			),
+			'name'	=>array(
+				'description'	=> t('Criterion name'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '128'
+			),
+			'type'	=>array(
+				'description'	=> t('Ponderation type'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '2'
+			),
+			'description'	=>array(
+				'description'	=> t('Criterion description'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '512'
+			), 
+			'value' => array(
+				'description' => t('Posible values.'),
+				'type'			=> 'varchar',
+				'not null'		=> TRUE,
+				'length'		=> '128'
+			),
+		),
+		'primary key' => array(
+			'tid'
+		),	
+	);
+
+return $schema;
+
+}
+
+/***********************************************************************/
+/********************* Other secondaty functions ***********************/
+/***********************************************************************/
+
+/**
+ * Delete our module's variable from the variables table.
+ * ponderator_uninstall variable is set on administration form validation
+ * contains all the variable names to be deleted
+ */
+function delete_variables(){
+	$raw = variable_get('ponderator_uninstall',"");
+
+	if($raw!=""){
+		$variables = explode(",",$raw);
+		foreach($variables as $variable)
+			variable_del($variable);
+	}
+}

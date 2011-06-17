@@ -1,0 +1,65 @@
+<?php
+// $Id: ponderator_chart.module, v0.2.002 2011/02/02
+
+/**
+ * ponderator chart database includes path
+ */
+define('PONDERATOR_CPAGEFILE','includes/ponderator_chart.page.inc');
+
+/**
+* Display help and module information
+* @param path which path of the site we're displaying help
+* @param arg array that holds the current path as would be returned from arg() function
+* @return help text for the path
+*/
+function ponderator_chart_help($path, $arg) {
+  $output = '';  //declare your output variable
+  switch ($path) {
+    case "admin/help#ponderator-chart":
+      $output =	'Help not implemented';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+/*function ponderator_perm() {
+  return array('access ponderator', 'administer ponderator', 'configure ponderator');
+}*/
+
+
+/**
+ * Implementation of hook_menu().
+ * We create the URLs we want to use,
+ * and the tabs of the module
+ */
+function ponderator_chart_menu() {
+
+	$items = array();
+
+	$items['ponderator/%/average-chart'] = array(
+	    'title'				=> t('Average Charts'),
+	    'page callback'		=> 'ponderator_chart_average',//average_chart_all,
+  		'page arguments'	=> array(1),
+		'access callback'	=> 'ponderator_access_perm_process',
+	    'access arguments'	=> array(1),
+	    'type'				=> MENU_LOCAL_TASK,
+	    'weight'			=> 2,
+  		'file'				=> PONDERATOR_CPAGEFILE
+	);
+
+	$items['ponderator/%/market-chart'] = array(
+	    'title'				=> t('Market Chart'),
+	    'page callback'		=> 'ponderator_chart_market',//market_chart_all,
+  		'page arguments'	=> array(1),
+		'access callback'	=> 'ponderator_access_perm_process',
+	    'access arguments'	=> array(1),
+	    'type'				=> MENU_LOCAL_TASK,
+	    'weight'			=> 3,
+  		'file'				=> PONDERATOR_CPAGEFILE
+	);
+
+	return $items;
+}

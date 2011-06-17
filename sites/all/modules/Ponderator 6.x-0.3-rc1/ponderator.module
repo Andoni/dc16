@@ -1,0 +1,359 @@
+<?php
+// $Id: ponderator.module, v0.3.001 2011/02/07
+/*
+ * Doxygen documentation
+ * http://drupal.org/node/1354
+ */
+
+ 
+define('PONDERATOR_PAGEFILE','includes/ponderator.page.inc');
+
+define('PONDERATOR_ADMINFILE','includes/ponderator.admin.inc');
+
+define('PONDERATOR_CONFIGFILE','includes/ponderator.config.inc');
+/******************** HOOKS ********************/
+
+/**
+* Display help and module information
+* @param path which path of the site we're displaying help
+* @param arg array that holds the current path as would be returned from arg() function
+* @return help text for the path
+*/
+function ponderator_help($path, $arg) {
+	$output = '';  //declare your output variable
+	switch ($path) {
+		case "admin/help#ponderator":
+			$output =	
+      			'<br/>'.
+      			'<h3>'.
+      				t('Installing') .
+      			'</h3><hr/>'.
+      			'<div class="item-list">'.
+	      			'<ol>'.
+	      				'<li>'.
+	      					t('Copy the module folder into <b>sites/all/modules</b> directory').
+	      				'</li>'.
+	      				'<li>'.
+	      					t('Activate it in <b>!link</b>. It will automaticaly create neeeded tables in the database.',
+	      					array('!link'=>l(t('Administer -> Site building -> Modules'),'admin/build/modules'))).
+	      				'</li>'.
+	      			'</ol>'.
+	      		'</div>'.
+      			'<h3>'.
+      				t('Configuration by the page admin') .
+      			'</h3><hr/>'.
+      			'<div class="item-list">'.
+	      			'<ol>'.
+	      				'<li>'.
+	      					t('Go to <b>!link</b>',
+		      					array(
+		      						'!link'	=>	l(t('Administer -> Site Configuration -> Ponderator'),'admin/settings/ponderator')
+		      					)
+	      					).
+	      				'</li>'.
+	      				'<li>'.
+	      					t('You have to define what <b>node type</b> has the ideas and what <b>vocabulary name</b> has the processes names.').
+	      				'</li>'.
+	      				'<li>'.
+	      					t("Don't forget to <b>Save</b> the changes.").
+	      				'</li>'.
+	      			'</ol>'.
+	      		'</div>'.
+      			'<h3>'.
+      				t('Configuration by the process manager') .
+      			'</h3><hr/>'.
+      			'<div class="item-list">'.
+	      			'<ol>'.
+	      				'<li>'.
+	      					t('Go to <b>!link</b>.',
+	      					array('!link'=>l(t('Ponderator Process Configuration'),'ponderator-config'))).
+	      				'</li>'.
+	      				'<li>'.
+	      					t('<b>Select the process</b> you want to configure.').
+	      				'</li>'.
+	      				'<li>'.
+	      					t('Select the <b>Ponderation mode</b> (The way that the users will add the ratings).').
+	      					'<ul>'.
+			      				'<li>'.
+			      					t('Depending on the <b>Ponderation mode</b> the possible values will be static or editable.').
+			      				'</li>'.
+			      				'<li>'.
+			      					t("If the values are editable they must be numeric values separated by ',' (for example <b>1,3,5,9</b>).").
+			      				'</li>'.
+			      			'</ul>'.
+	      				'</li>'.
+	      				'<li>'.
+	      					t('Fill the <b>name</b>, <b>description</b> and <b>weight</b> of the criteria.').
+	      					'<ul>'.
+			      				'<li>'.
+			      					t('To add more criteria click on the <b>Add criterion</b> button as many times as you need.').
+			      				'</li>'.
+			      				'<li>'.
+			      					t("If you want to delete a criterion just leave it's name empty.").
+			      				'</li>'.
+			      			'</ul>'.
+	      				'</li>'.
+	      				'<li>'.
+	      					t('Click on the <b>Save</b> button and all changes will be saved.').
+	      				'</li>'.
+	      			'</ol>'.
+	      		'</div>'.
+      			'<h3>'.
+      				t('Userside') .
+      			'</h3><hr/>'.
+      			'<div class="item-list">'.
+      				'<ol>'.
+	      				'<li>'.
+	      					t('The ponderation functionality will be available <b>!link</b>.',
+	      					array('!link'=>l(t('here'),'ponderator'))).
+	      				'</li>'.
+	      				'<li>'.
+	      					t('The user must <b>select the process</b> to rate.').
+	      				'</li>'.
+	      				'<li>'.
+	      					t('Users will <b>fill the rating matrix</b> to rate the idea-criterion relations.').
+	      				'</li>'.
+	      				'<li>'.
+	      					t("Clicking on the <b>Save</b> will save the matrix (if there isn't any error).").
+	      				'</li>'.
+	      				'<li>'.
+	      					t('The other <b>tabs</b> will display the ratings and averages in different ways.').
+	      				'</li>'.
+	      			'</ol>'.
+	      		'</div>'
+      			;
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function ponderator_perm() {
+	$permissions	=	array('administer ponderator');
+	
+	$processes = taxonomy_get_tree(variable_get("ponderator_vid","process"));
+	if(count($processes>0))
+		foreach($processes as $process){
+			$permissions[]	=	"access ponderator ".$process->tid;
+			$permissions[]	=	"configure ponderator ".$process->tid;
+		}
+  	return $permissions;
+}
+
+
+/**
+ * Implementation of hook_menu().
+ * We create the URLs we want to use,
+ * and the tabs of the module
+ */
+function ponderator_menu() {
+
+	$items = array();
+
+	//Admin
+	$items['admin/settings/ponderator'] = array(
+	    'title'				=> t('Ponderator'),
+	    'description'		=> t('Description'),
+        'page callback' 	=> 'drupal_get_form',
+        'page arguments' 	=> array('ponderator_admin_form'),
+	    'access arguments'	=> array('administer ponderator'),
+	    'type' 				=> MENU_NORMAL_ITEM,
+	  	'file' 				=> PONDERATOR_ADMINFILE,
+	);
+	
+	$items['ponderator-config'] = array(
+		'title'				=> t('Ponderator Process Configuration'),
+		'description'		=> t('Configure processes criteria, weight, ponderation mode...'),
+    	'page callback'		=> 'ponderator_config_list',
+		'access callback'	=> 'ponderator_config_perm',
+    	'type'				=> MENU_NORMAL_ITEM,
+	  	'file' 				=> PONDERATOR_CONFIGFILE,
+	);
+	
+	$items['ponderator-config/%'] = array(
+	    'title'				=> t('Configure process'),
+	    'description'		=> t('Configure process for ponderation'),
+        'page callback' 	=> 'drupal_get_form',
+  		'page arguments'	=> array('ponderator_config_form',1),
+		'access callback'	=> 'ponderator_config_perm_process',
+	    'access arguments'	=> array(1),
+	    'type' 				=> MENU_NORMAL_ITEM,
+	  	'file' 				=> PONDERATOR_CONFIGFILE,
+	);
+   
+  	//AHAH
+  	$items['ponderator-config/%/js'] = array(
+    	'page callback'		=> 'ponderator_config_js',
+  		'page arguments'	=> array(1,3),
+		'access callback'	=> 'ponderator_config_perm_process',
+	    'access arguments'	=> array(1),
+    	'type'				=> MENU_CALLBACK,
+  		'file'				=> PONDERATOR_CONFIGFILE
+  	);
+   
+	//Page
+	$items['ponderator'] = array(
+		'title' 			=> t('Ponderator'),
+    	'page callback' 	=> 'ponderator_list',
+		'access callback'	=> 'ponderator_access_perm',
+	    'access arguments'	=> array(),
+    	'type' 				=> MENU_NORMAL_ITEM,
+  		'file'				=> PONDERATOR_PAGEFILE
+	);
+	$items['ponderator/%'] = array(
+		'title' 			=> t('Idea ratings'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ponderator_all_form',1),
+		'access callback'	=> 'ponderator_access_perm_process',
+	    'access arguments'	=> array(1),
+    	'type' 				=> MENU_NORMAL_ITEM,
+  		'file'				=> PONDERATOR_PAGEFILE
+	);
+
+	$items['ponderator/%/my-ratings'] = array(
+		'title' 			=> t('My ratings'),
+  		'page arguments'	=> array(1),
+		'access callback'	=> 'ponderator_access_perm_process',
+	    'access arguments'	=> array(1),
+		'type' 				=> MENU_DEFAULT_LOCAL_TASK,
+		'weight' 			=> 0,
+  		'file'				=> PONDERATOR_PAGEFILE
+	);
+
+	$items['ponderator/%/average-ratings'] = array(
+		'title' 			=> t('Average ratings'),
+		'page callback' 	=> 'ponderator_average_table_all',
+  		'page arguments'	=> array(1),
+		'access callback'	=> 'ponderator_access_perm_process',
+	    'access arguments'	=> array(1),
+		'type' 				=> MENU_LOCAL_TASK,
+		'weight' 			=> 1,
+  		'file'				=> PONDERATOR_PAGEFILE
+	);
+	
+	/*Access restrictions not very strict, we could achieve tid from cid*/
+	$items['ponderator/criterion/%'] = array(
+		'title' 			=> t('Criterion info'),
+		'page callback' 	=> 'ponderator_show_criterion',
+  		'page arguments'	=> array(2),
+		'access callback'	=> 'ponderator_access_perm',
+	    'access arguments'	=> array(),
+		'type' 				=> MENU_CALLBACK,
+		'weight' 			=> 1,
+  		'file'				=> PONDERATOR_PAGEFILE
+	);
+
+	return $items;
+}
+
+function ponderator_theme(){
+	return 
+		array(
+    		'ponderator_all_form' => array(
+      			'arguments' => array(
+      				'form' => NULL
+				),
+    		),
+  		);
+}
+
+/****************** PERMISSION  FUNCTIONS ******************/
+
+function ponderator_config_perm(){
+	$processes = taxonomy_get_tree(variable_get("ponderator_vid","0"));
+	if(count($processes>0)){
+		foreach($processes as $process){
+			if(user_access('configure ponderator '.$process->tid)){
+				return TRUE;
+			}
+		}
+	}
+				
+	return FALSE;
+		
+}
+
+function ponderator_config_perm_process($tid){
+	return (user_access("configure ponderator $tid"));
+}
+
+function ponderator_access_perm(){
+	$processes = taxonomy_get_tree(variable_get("ponderator_vid","process"));
+	if(count($processes>0))
+		foreach($processes as $process)
+			if(user_access("access ponderator ".$process->tid))
+				return user_access("access ponderator ".$process->tid);
+				
+	return FALSE;
+		
+}
+
+function ponderator_access_perm_process($tid){
+	return (user_access("access ponderator $tid"));
+}
+
+/******************** SHARED FUNCTIONS ********************/
+
+/**
+ * Know if a string is in an array of strings
+ * @param $string is the value to search
+ * @param $array is the array in where we want to search
+ * 
+ * @return true if the string is in the array, false if not
+ */
+function is_string_in_array($string,$array){
+	$count = count($array);
+	if($count>0)
+		foreach($array as &$value)
+			if($string==$value)
+				return true;
+	return false;
+}
+
+function ponderator_get_posible_modes($custorm_values='1,3,9',$tid=null){
+	if($tid){
+		$spmaxvalue	=	count(ponderator_get_nodes($tid));
+		//
+		$values		=	explode(',', $custorm_values);
+		$first_time =	true;
+		foreach($values as $value)
+			if($first_time){
+				$mcmaxvalue =	$value;
+				$mcminvalue =	$value;
+				$first_time	=	false;
+			}else{
+				$mcmaxvalue =	($mcmaxvalue<$value) ? $value : $mcmaxvalue;
+				$mcminvalue =	($mcminvalue>$value) ? $value : $mcminvalue;
+			}
+	}else{
+		$spmaxvalue =	'# of ideas';
+		$mcmaxvalue =	'custom values';
+		$mcminvalue =	'custom values';
+	}
+	
+	return array(
+		'N'	=> array(
+			'name'			=> t('Normal ponderation'),
+			'description'	=> t('A value between 1 and 10 for each idea-criteria relation'),
+			'values'		=> '0-10',
+			'maxvalue'		=> '10',
+			'minvalue'		=> '0',
+		),
+		'SP'	=> array(
+			'name'			=> t('Ponderated selection'),
+			'description'	=> t('Order the ideas with each criterion (the higher the better)'),
+			'values'		=> t('1-# of ideas'),
+			'maxvalue'		=> $spmaxvalue,
+			'minvalue'		=> '1'
+		),
+		'MC'	=> array(
+			'name'			=> t('Criteria matrix'),
+			'description'	=> t('Pre-stablished values for each criteria (1,3,9 values by default)'),
+			'values'		=> $custorm_values,
+			'maxvalue'		=> $mcmaxvalue,
+			'minvalue'		=> $mcminvalue,
+		),
+	);
+}

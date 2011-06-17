@@ -1,0 +1,280 @@
+/* $Id: local-sample.css 6555 2010-02-24 20:21:15Z chris $ */
+
+/****************************/
+/* LOCAL CSS                */
+/****************************/
+
+/* Put your custom CSS and CSS overrides in this file and  */
+/* rename it local.css.  By restricting your CSS changes   */
+/* to local.css, your changes will not be overwritten when */
+/* upgrading to a new version of this theme.  You can also */
+/* use a local-rtl.css file for the equivalent in RTL.     */
+
+/* Steps to activate local.css:                       */
+/* 1. Add your custom CSS to this file                */
+/* 2. Rename this file to local.css                   */
+/* 3. Clear cached data at admin/settings/performance */
+body {
+
+	color: #B20838;
+	background: #EFECEA;
+	font-family: Arial, Helvetica, Sans, serif;
+	font-size: 13px;
+}
+
+.front .grid16-16 {
+	
+	width: 95%;
+	max-width: 95%;
+
+
+}
+
+
+
+#logo {
+
+    margin: 15px 13px 0 0;
+
+}
+
+.view-user-meta .views-field-nothing a, .view-user-meta .views-field-nothing-1 a {
+	color:#7F686E;
+}
+.view-user-meta .views-field-name span.username a {
+
+	color:#B20838;
+}
+.content {
+	color: #7F686E;
+}
+.panel-pane .view-og-calendar .view-header .addnew a, .panel-pane .view-recent-notices .view-header .addnew a, .panel-pane .view-header .addnew a {
+	color: #7F686E;
+}
+.panel-pane .view-og-calendar .view-header .addnew a:hover, .panel-pane .view-recent-notices .view-header .addnew a:hover, .panel-pane .view-header .addnew a:hover, .panel-pane .view-og-calendar .view-header .addnew a:focus, .panel-pane .view-recent-notices .view-header .addnew a:focus, .panel-pane .view-header .addnew a:focus, .panel-pane .view-og-calendar .view-header .addnew a:active, .panel-pane .view-recent-notices .view-header .addnew a:active, .panel-pane .view-header .addnew a:active{
+	color: #F47D31;
+}
+.panels-flexible-region .panel-pane .inner .pane-title  a{
+	color: #7F686E;
+	font-weight: bold;
+}
+
+a, a:link, a:visited {
+
+	color:#B20838;
+}
+
+.views-field-title a, .views-field-title a:link,.views-field-title a:visited{
+	color:#B20838;
+	font-weight: bold;
+}
+a:hover, a:focus, a:active{
+	color: #F47D31;
+	font-weight: bold;
+}
+
+.views-field-title a:hover, .views-field-title a:focus,.views-field-title a:active{
+	color:#F47D31;
+	font-weight: bold;
+}
+
+form input.form-submit, .views-exposed-form .views-exposed-widget input.form-submit {
+	background-color:#FC4F13;
+}
+
+.panel-panel .block .inner h2.pane-title, .panel-pane .inner h2.pane-title, .panel-panel .block .inner h2.block-title, .panel-pane .inner h2.block-title, .panel-panel .pane-node-content .node {
+	border-top:4px solid #7F686E;
+	color: #7F686E;
+	font-weight: bold;
+}
+
+.shoutbox-all-shouts {
+	border-top:1px solid #7F686E;
+}
+
+.view div.more-link, .view .view-footer, .heartbeat-more-messages-wrapper {
+	border-top:1px solid #7F686E;
+}
+
+tbody {
+	border-top:1px solid #7F686E;
+}
+
+thead th, th {
+	border-bottom:1px solid #7F686E;
+	color: #B20838;
+}
+
+tr.even, tr.odd {
+	border-bottom:1px solid #7F686E;
+}
+
+#content-tabs ul.primary li a.active:link, #content-tabs ul.primary li a.active:visited {
+	background-color:#BEB5AE;
+	border:1px solid #D1D1D1;
+	color:#464646;
+}
+
+#content-tabs ul.primary li a:link, #content-tabs ul.primary li a:visited {
+	background-color:#7F686E;
+	color:#FFFFFF;
+	border-bottom:1px solid #7F686E;
+}
+
+#content-tabs ul.primary, #content-tabs ul.secondary {
+	border-bottom:2px solid #7F686E;
+}
+
+.nav-group {
+	background-color:#7F686E;
+
+}
+.primary-menu-inner ul.sf-menu a:hover, .primary-menu-inner ul.sf-menu a:active, .primary-menu-inner ul.sf-menu a:focus, .primary-menu-inner ul.sf-menu li.active-trail > a, .primary-menu-inner ul.sf-menu li.sfHover > a {
+	background-color:#BEB5AE;
+}
+
+.primary-menu-inner ul.sf-menu li li a, .primary-menu-inner ul.sf-menu li li a:link, .primary-menu-inner ul.sf-menu li li a:visited {
+	background-color:#7F686E;
+	color:#FFFFFF;
+}
+
+.primary-menu-inner ul.sf-menu li li a:hover, .primary-menu-inner ul.sf-menu li li a:active, .primary-menu-inner ul.sf-menu li li a:focus {
+	background-color:#BEB5AE;
+	color:#464646;
+}
+.primary-menu-inner ul.sf-menu ul {
+	background-color:#7F686E;
+}
+
+.footer {
+	min-height: 60px;
+	background:#7f686e;
+}
+
+.footer-wrapper {
+	
+	background-color:#EFECEA;
+	
+}
+
+.profile .userpoints {
+	background-color:#7F686E;
+	border:1px solid #B20838;
+}
+
+.breadcrumbs {
+	background-color:#EFECEA;
+	color:#333333;
+}
+
+.search-box-inner input#search_header {
+	background:url("/drupal_commons2/profiles/drupal_commons/themes/acquia_commons/images/search-submit-orange.png") repeat-x scroll 0 0 #FC4F13;	
+	border:1px solid #FC4F13;
+	color:#FFFFFF;
+	font-weight: bold;
+}
+
+.footer-message-wrapper {
+	background-color:#cfcfcf;
+	color:#FFFFFF;
+	font-weight: bold;
+	padding:10px 0;
+}
+
+.node .inner .links ul li > a {	color:#B20838;;}
+
+/* substitute for /fusion_core/style.css */
+.profile dt {
+width:140px;
+}
+
+textarea, .form-item input, .form-item select, #content-region input.form-text {
+max-width:95%;
+}
+
+.shoutbox-add-form input#edit-message {
+width:80%;
+}
+
+fieldset {
+background-color: #EFECEA;
+border: none;
+}
+
+.shoutbox-add-form input.form-submit {
+height:26px;
+width: 60px;
+}
+
+h1.title {
+
+color:#B20838;
+font-weight: bold;
+}
+
+.comment .comment-info {
+background: none;
+}
+
+.breadcrumbs-wrapper {
+	background-color: #EFECEA;
+}
+
+ul.pager li.pager-current {
+background-color:#FC4F13;
+color:#FFFFFF;
+}
+
+ul.pager li a:hover, ul.pager li a:active, ul.pager li a:focus {
+background-color: #FC4F13;
+} 
+
+.node .inner ul li > a, .panel-pane .inner ul li > a, .block .content ul li > a {
+color:#B20838;
+}
+
+.node .inner ul li > a:hover, .panel-pane .inner ul li > a:hover, .block .content ul li > a:hover
+.node .inner ul li > a:focus, .panel-pane .inner ul li > a:focus, .block .content ul li > a:focus
+.node .inner ul li > a:active, .panel-pane .inner ul li > a:active, .block .content ul li > a:active
+{
+	color: #F47D31;
+}
+
+.front .panel-panel .block .inner h2.pane-title, .front .panel-pane .inner h2.pane-title, .front .panel-panel .block .inner h2.block-title, .front .panel-pane .inner h2.block-title, .front .panel-panel .pane-node-content .node {
+
+    font-weight: bold;
+    line-height: 26px;
+
+}
+
+.view-homepage-group-showcase .views-row .views-field-title a {
+    color: #B20838;
+}
+
+
+.preface-bottom {
+
+	float: right;
+
+}
+
+.block-languageinterface {
+
+	text-align:right;
+	float:left;
+}
+
+#language-interface li  {
+  
+    display: inline;  
+    list-style-type: none;  
+    padding: 0;  
+    margin: 0px 5px 0px 0px;  
+    height: 12px;  
+}  
+
+.commons-list-circle-bullets .content ul {
+    margin-left: 18px;
+    text-align: right;
+}
+

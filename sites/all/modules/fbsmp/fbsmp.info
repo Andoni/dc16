@@ -1,0 +1,12 @@
+name = Facebook-style Micropublisher
+description = Allows users to easily publish various kinds of content (links, photos, videos, etc) in a stream like on Facebook.
+core = 6.x
+package = Facebook-style Statuses
+dependencies[] = facebook_status
+dependencies[] = ctools
+; Information added by drupal.org packaging script on 2011-04-23
+version = "6.x-1.1"
+core = "6.x"
+project = "fbsmp"
+datestamp = "1303571215"
+
